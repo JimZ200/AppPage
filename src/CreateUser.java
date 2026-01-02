@@ -80,11 +80,15 @@ public class CreateUser extends JFrame implements ActionListener{
                 JOptionPane.showMessageDialog(this, "Please fill every field");
             } else {
                 //add the values into database
-                DataBaseManager.addInfo(userName, password, firstName, lastName);
+                boolean addedSuccess = DataBaseManager.addInfo(userName, password, firstName, lastName);
 
-                JOptionPane.showMessageDialog(this, "Created Successful");
+                if(addedSuccess) {
+                    JOptionPane.showMessageDialog(this, "Created Successful");
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Username already exists");
+                }
 
-                this.dispose();
             }
         }
     }

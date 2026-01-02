@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.sql.*;
 
 public class DataBaseManager {
@@ -42,7 +43,6 @@ public class DataBaseManager {
             return rowInserted > 0;
 
         } catch (SQLException e){
-            System.out.println(e.getMessage());
             return false;
         }
     }

@@ -20,10 +20,12 @@ public class HomePage extends JPanel implements ActionListener{
 
     String userName;
 
+    JButton exit = new JButton("Logout");
+
+
     HomePage(String userName){
 
         this.userName = userName;
-
 
         setVisible(true);
         setBounds(10,10,370,600);
@@ -60,16 +62,19 @@ public class HomePage extends JPanel implements ActionListener{
 
     public void setLocationAndSize(){
         setting.setBounds(20,20,50,15);
+        exit.setBounds(20, 300, 100, 30);
     }
 
     public void addComponent(){
         this.add(setting);
         this.add(done);
+        this.add(exit);
     }
 
     public void addAction(){
         setting.addActionListener(this);
         done.addActionListener(this);
+        exit.addActionListener(this);
     }
 
 

@@ -85,7 +85,7 @@ public class LoginPage extends JFrame implements ActionListener{
             if(userName.isEmpty() || password.isEmpty()){
                 JOptionPane.showMessageDialog(this, "Fields should not be empty");
             } else if(DataBaseManager.checkLogin(userName, password)){
-                //JOptionPane.showMessageDialog(this, "Success");
+
                 getContentPane().removeAll();
 
                 add(new HomePage(userName));
