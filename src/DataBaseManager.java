@@ -26,7 +26,7 @@ public class DataBaseManager {
     }
 
     public static boolean addInfo(String username, String password, String fname, String lname){
-        String sql = "insert into Users values(?,?,?,?)";
+        String sql = "insert into Users values(?,?,?,?, '#FFFFFF')";
 
         try(Connection conn = DriverManager.getConnection(url)){
 
@@ -45,5 +45,41 @@ public class DataBaseManager {
             System.out.println(e.getMessage());
             return false;
         }
+    }
+
+    public static void setColour(String colour, String userName){
+        String sql = "update Users set backgroundColour = ? where username = ?";
+
+        try(Connection conn = DriverManager.getConnection(url)){
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ps.setString(1, colour);
+            ps.setString(2,userName);
+
+            int row = ps.executeUpdate();
+
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static String getColour(String userName){
+        String sql = "select backgroundColour from Users where username = ?";
+
+        try(Connection conn = DriverManager.getConnection(url)){
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ps.setString(1,userName);
+
+            ResultSet result = ps.executeQuery();
+
+            if(result.next()) return result.getString("backgroundColour");
+
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+
+        }
+
+        return "#FFFFFF";
     }
 }
