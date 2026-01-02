@@ -1,0 +1,49 @@
+import java.sql.*;
+
+public class DataBaseManager {
+
+    private static final String url = "jdbc:sqlite:usersdb.db";
+
+    public static boolean checkLogin(String userName, String password) {
+        String sql = "Select * from Users where username = ? and password = ? ";
+
+        try (Connection conn = DriverManager.getConnection(url)) {
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1,userName);
+            pstmt.setString(2, password);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            return rs.next();
+
+        } catch (SQLException e) {
+            System.out.println("Error" + e.getMessage());
+            return false;
+        }
+
+    }
+
+    public static boolean addInfo(String username, String password, String fname, String lname){
+        String sql = "insert into Users values(?,?,?,?)";
+
+        try(Connection conn = DriverManager.getConnection(url)){
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1,username);
+            pstmt.setString(2,password);
+            pstmt.setString(3,fname);
+            pstmt.setString(4,lname);
+
+            int rowInserted = pstmt.executeUpdate();
+
+            return rowInserted > 0;
+
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+}
