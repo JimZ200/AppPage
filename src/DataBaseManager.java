@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.sql.*;
+import java.util.*;
 
 public class DataBaseManager {
 
@@ -81,5 +82,47 @@ public class DataBaseManager {
         }
 
         return "#FFFFFF";
+    }
+
+    public static void addNotes(String note, String username){
+        String sql = "insert into Notes(username, noteContent) values(?,?)";
+
+        try(Connection conn = DriverManager.getConnection(url)){
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ps.setString(1, username);
+            ps.setString(2, note);
+
+            int row = ps.executeUpdate();
+
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static ArrayList<String> getNotes(String userName){
+
+        ArrayList<String> note = new ArrayList<>();
+
+        String sql = "Select noteContent from Notes where username = ?";
+
+        try(Connection conn = DriverManager.getConnection(url)){
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ps.setString(1, userName);
+
+            ResultSet result = ps.executeQuery();
+
+            while(result.next()){
+                note.add(result.getString("noteContent"));
+            }
+
+            return note;
+
+        } catch (SQLException e){
+            return new ArrayList<>();
+        }
     }
 }
