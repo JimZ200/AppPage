@@ -10,8 +10,6 @@ public class HomePage extends JPanel implements ActionListener{
     JLabel colourField = new JLabel("Enter colour");
     JTextField colour = new JTextField(10);
     JButton done = new JButton("Done");
-
-
     JMenuItem item2 = new JMenuItem("Close menu");
 
 
@@ -97,10 +95,20 @@ public class HomePage extends JPanel implements ActionListener{
 
                 setColour(DataBaseManager.getColour(this.userName));
             }
+        } else if(e.getSource() == exit){
+            Window window = SwingUtilities.getWindowAncestor(this);
+
+            window.dispose();
+
+            new LoginPage();
         }
     }
 
     public void setColour(String colour){
         setBackground(Color.decode(colour));
+    }
+
+    public boolean checkColour(String input){
+        return (input.length() == 7 && input.charAt(0) == '#');
     }
 }
