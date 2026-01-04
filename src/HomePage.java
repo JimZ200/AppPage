@@ -2,6 +2,7 @@ import javax.swing.*;
 import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
 
 public class HomePage extends JPanel implements ActionListener{
 
@@ -23,9 +24,16 @@ public class HomePage extends JPanel implements ActionListener{
     //add new notes button
     JButton add = new JButton("+");
 
+    //display button
+    JButton display = new JButton("Display Notes");
+
+    ArrayList<String> notes = new ArrayList<>();
+
     HomePage(String userName){
 
         this.userName = userName;
+
+        notes = null;
 
         setVisible(true);
         setBounds(10,10,370,600);
@@ -63,6 +71,7 @@ public class HomePage extends JPanel implements ActionListener{
         setting.setBounds(20,20,100,30);
         exit.setBounds(20, 300, 100, 30);
         add.setBounds(200, 300, 100, 30);
+        display.setBounds(90, 350, 150, 30);
     }
 
     public void addComponent(){
@@ -70,6 +79,7 @@ public class HomePage extends JPanel implements ActionListener{
         this.add(done);
         this.add(exit);
         this.add(add);
+        this.add(display);
     }
 
     public void addAction(){
@@ -77,6 +87,7 @@ public class HomePage extends JPanel implements ActionListener{
         done.addActionListener(this);
         exit.addActionListener(this);
         add.addActionListener(this);
+        display.addActionListener(this);
     }
 
 
@@ -123,6 +134,10 @@ public class HomePage extends JPanel implements ActionListener{
                 //save to database
                 DataBaseManager.addNotes(noteArea.getText(), this.userName);
             }
+        } else if(e.getSource() == display){
+            notes = DataBaseManager.getNotes(this.userName);
+
+            //display the notes
         }
     }
 
