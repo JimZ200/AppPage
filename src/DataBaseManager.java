@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.sql.*;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class DataBaseManager {
 
@@ -85,7 +86,12 @@ public class DataBaseManager {
     }
 
     public static void addNotes(String note, String username){
-        String sql = "insert into Notes(username, noteContent) values(?,?)";
+        String sql = "insert into Notes(username, noteContent, dateAdded) values(?,?,?)";
+
+        //get the current time
+        LocalDateTime now = LocalDateTime.now();
+
+        Timestamp dateToAdd = Timestamp.valueOf(now);
 
         try(Connection conn = DriverManager.getConnection(url)){
 
@@ -93,6 +99,7 @@ public class DataBaseManager {
 
             ps.setString(1, username);
             ps.setString(2, note);
+            ps.setTimestamp(3,dateToAdd);
 
             int row = ps.executeUpdate();
 
@@ -101,11 +108,11 @@ public class DataBaseManager {
         }
     }
 
-    public static ArrayList<String> getNotes(String userName){
+    public static DefaultListModel<String> getNotes(String userName){
 
-        ArrayList<String> note = new ArrayList<>();
+        DefaultListModel<String> note = new DefaultListModel<>();
 
-        String sql = "Select noteContent from Notes where username = ?";
+        String sql = "Select noteContent,dateAdded from Notes where username = ?";
 
         try(Connection conn = DriverManager.getConnection(url)){
 
@@ -116,13 +123,22 @@ public class DataBaseManager {
             ResultSet result = ps.executeQuery();
 
             while(result.next()){
-                note.add(result.getString("noteContent"));
+                Timestamp temp = result.getTimestamp("dateAdded");
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM dd, yyyy - HH:mm");
+
+                //convert into string
+                String formattedDate = temp.toLocalDateTime().format(formatter);
+
+                String toAdd = formattedDate + "---" + result.getString("noteContent");
+
+                note.addElement(toAdd);
             }
 
             return note;
 
         } catch (SQLException e){
-            return new ArrayList<>();
+            return new DefaultListModel<String>();
         }
     }
 }

@@ -27,13 +27,13 @@ public class HomePage extends JPanel implements ActionListener{
     //display button
     JButton display = new JButton("Display Notes");
 
-    ArrayList<String> notes = new ArrayList<>();
+    DefaultListModel<String> notes;
+    JList<String> noteList;
+    JScrollPane scrollPane;
 
     HomePage(String userName){
 
         this.userName = userName;
-
-        notes = null;
 
         setVisible(true);
         setBounds(10,10,370,600);
@@ -135,9 +135,7 @@ public class HomePage extends JPanel implements ActionListener{
                 DataBaseManager.addNotes(noteArea.getText(), this.userName);
             }
         } else if(e.getSource() == display){
-            notes = DataBaseManager.getNotes(this.userName);
-
-            //display the notes
+                displayNoteSectionOnScreen();
         }
     }
 
@@ -167,5 +165,25 @@ public class HomePage extends JPanel implements ActionListener{
         }
 
         return result.toString();
+    }
+
+    public void displayNoteSectionOnScreen(){
+
+        if(scrollPane != null){
+            this.remove(scrollPane);
+        }
+
+        notes = DataBaseManager.getNotes(this.userName);
+        noteList = new JList<>(notes);
+
+        noteList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        noteList.setFont(new Font("Arial", Font.PLAIN, 13));
+
+        scrollPane = new JScrollPane(noteList);
+        scrollPane.setBounds(10,50,330,230);
+        this.add(scrollPane);
+
+        this.revalidate();
+        this.repaint();
     }
 }
